@@ -30,7 +30,7 @@ const dataList: IData[] = [
 
 function App() {
   // filter
-  const [filter, setFilter] = useState<string>('');
+  const [filter, setFilter] = useState<string>("");
   const [data, setData] = useState<IData[]>([]);
 
   // dong ho
@@ -69,7 +69,7 @@ function App() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isRunning]); 
+  }, [isRunning]);
 
   const handleStart = () => {
     setIsRunning(true);
@@ -148,23 +148,27 @@ function App() {
         />
 
         <Box>
-          {data.length !== 0 ? (
-            data.map((item) => (
-              <div key={item.name}>
-                <Typography variant="body1" fontWeight={500} paddingY={2}>
-                  {item.name} : {item.description}
-                </Typography>
-                <Divider sx={{ border: "2px solid #DEE2E6" }} />
-              </div>
-            ))
+          {filter !== "" ? (
+            data.length !== 0 ? (
+              data.map((item) => (
+                <div key={item.name}>
+                  <Typography variant="body1" fontWeight={500} paddingY={2}>
+                    {item.name} : {item.description}
+                  </Typography>
+                  <Divider sx={{ border: "2px solid #DEE2E6" }} />
+                </div>
+              ))
+            ) : (
+              <Typography
+                variant="body1"
+                sx={{ color: "red", mt: 5 }}
+                fontWeight={600}
+              >
+                Không tìm thấy sản phẩm nào
+              </Typography>
+            )
           ) : (
-            <Typography
-              variant="body1"
-              sx={{ color: "red", mt: 5 }}
-              fontWeight={600}
-            >
-              Không tìm thấy sản phẩm nào
-            </Typography>
+            ""
           )}
         </Box>
       </Box>
@@ -173,4 +177,3 @@ function App() {
 }
 
 export default App;
-

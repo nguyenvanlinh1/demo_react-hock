@@ -33,11 +33,10 @@ function App() {
   const [filter, setFilter] = useState<string>('');
   const [data, setData] = useState<IData[]>([]);
 
+  // dong ho
   const secondsRef = useRef<number>(0);
   const minutesRef = useRef<number>(0);
   const hoursRef = useRef<number>(0);
-
-  // Sử dụng useState để cập nhật giá trị hiển thị trên UI
   const [second, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
@@ -150,7 +149,7 @@ function App() {
 
         <Box>
           {data.length !== 0 ? (
-            data.slice(0, 4).map((item) => (
+            data.map((item) => (
               <div key={item.name}>
                 <Typography variant="body1" fontWeight={500} paddingY={2}>
                   {item.name} : {item.description}

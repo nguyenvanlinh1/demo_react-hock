@@ -28,62 +28,61 @@ const dataList: IData[] = [
   },
 ];
 
+const STEP = 1;
+const ZERO = 0;
+const MAX = 60;
+const DELAY = 1000;
+
 function App() {
   // filter
   const [filter, setFilter] = useState<string>("");
   const [data, setData] = useState<IData[]>([]);
 
   // dong ho
-  const secondsRef = useRef<number>(0);
-  const minutesRef = useRef<number>(0);
-  const hoursRef = useRef<number>(0);
-  const [second, setSeconds] = useState<number>(0);
-  const [minutes, setMinutes] = useState<number>(0);
-  const [hours, setHours] = useState<number>(0);
+  const secondsRef = useRef(0);
+  const minutesRef = useRef(0);
+  const hoursRef = useRef(0);
   const [isRunning, setIsRunning] = useState(false);
-
+  const [, forceUpdate] = useState(0);
+  
+  const formatTime = (value: number) => value.toString().padStart(2, "0");
+  
   useEffect(() => {
     let interval: any = null;
-
+  
     if (isRunning) {
       interval = setInterval(() => {
-        secondsRef.current += 1;
-        setSeconds(secondsRef.current);
-
-        if (secondsRef.current >= 60) {
-          secondsRef.current = 0;
-          minutesRef.current += 1;
-          setMinutes(minutesRef.current);
+        secondsRef.current += STEP;
+  
+        if (secondsRef.current >= MAX) {
+          secondsRef.current = ZERO;
+          minutesRef.current += STEP;
         }
-
-        if (minutesRef.current >= 60) {
-          minutesRef.current = 0;
-          hoursRef.current += 1;
-          setHours(hoursRef.current);
+  
+        if (minutesRef.current >= MAX) {
+          minutesRef.current = ZERO;
+          hoursRef.current += STEP;
         }
-      }, 1000);
-    } else {
-      if (interval) clearInterval(interval);
+  
+        forceUpdate((prev) => prev + 1);
+      }, DELAY);
+    } else if (interval) {
+      clearInterval(interval);
     }
-
+  
     return () => {
       if (interval) clearInterval(interval);
     };
   }, [isRunning]);
-
-  const handleStart = () => {
-    setIsRunning(true);
-  };
-
-  const handleStop = () => {
-    setIsRunning(false);
-  };
-
+  
+  const handleStart = () => setIsRunning(true);
+  const handleStop = () => setIsRunning(false);
   const handleReset = () => {
     setIsRunning(false);
-    setSeconds(0);
-    setMinutes(0);
-    setHours(0);
+    secondsRef.current = ZERO;
+    minutesRef.current = ZERO;
+    hoursRef.current = ZERO;
+    forceUpdate((prev) => prev + 1);
   };
 
   const reqApi = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,10 +90,10 @@ function App() {
     setFilter(inputValue);
 
     const filterData = dataList.filter((item) =>
-      item.name.toLowerCase().includes(inputValue)
+      item.name.toLowerCase().trim().includes(inputValue)
     );
     setData(filterData);
-  }, 1000);
+  }, DELAY);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     reqApi(e);
@@ -102,31 +101,35 @@ function App() {
 
   return (
     <>
-      <Clock hours={hours} second={second} minues={minutes} />
+      <Clock hours={formatTime(hoursRef.current)} second={formatTime(secondsRef.current)} minues={formatTime(minutesRef.current)} />
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
+        gap={2}
       >
         <CustomButton
           typeButton={ButtonVariant.CONTAINED}
           name={"Bắt đầu"}
           isFullWidth={false}
           onClick={handleStart}
+          disabled={isRunning}
         />
         <CustomButton
           typeButton={ButtonVariant.CONTAINED}
           name={"Tạm dừng"}
           isFullWidth={false}
           onClick={handleStop}
+          disabled={!isRunning}
         />
         <CustomButton
           typeButton={ButtonVariant.CONTAINED}
           name={"Reset"}
           isFullWidth={false}
           onClick={handleReset}
+          // disabled={!isRunning}
         />
       </Box>
 

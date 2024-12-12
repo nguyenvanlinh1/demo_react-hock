@@ -1,9 +1,9 @@
 import { Box, Grid2, Typography } from "@mui/material";
 
 interface IClock {
-    hours: number;
-    minues: number;
-    second: number;
+    hours: string;
+    minues: string;
+    second: string;
 }
 
 const Clock = ({hours, minues, second} : IClock) => {

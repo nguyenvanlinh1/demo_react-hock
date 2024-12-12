@@ -13,6 +13,7 @@ interface IButton {
   style?: React.CSSProperties;
   opacity?: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const CustomButton = ({
@@ -22,6 +23,7 @@ const CustomButton = ({
   style,
   opacity,
   onClick,
+  disabled
 }: IButton) => {
   return (
     <div>
@@ -44,6 +46,7 @@ const CustomButton = ({
         fullWidth={isFullWidth}
         style={style}
         onClick={onClick}
+        disabled={disabled}
       >
         {name}
       </Button>
